@@ -147,49 +147,41 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Remove product from cart
     function removeFromCart(index) {
         cart.splice(index, 1);
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Update the cart UI
     function updateCartUI() {
-        cartContainer.innerHTML = ""; // Clear cart efficiently
+        const cartBoxes = document.querySelectorAll('.shopping-cart .box');
+        cartBoxes.forEach(box => box.remove());
 
         let total = 0;
+
         cart.forEach((item, index) => {
             const cartItem = document.createElement('div');
             cartItem.className = 'box';
             cartItem.dataset.index = index;
-            const price = parseFloat(item.price); // Parse price correctly
-            total += price * item.quantity;
             cartItem.innerHTML = `
                 <i class="fas fa-trash"></i>
                 <img src="${item.image}" alt="${item.name}" />
                 <div class="content">
                     <h3>${item.name}</h3>
-                    <span class="price">৳${price.toFixed(2)}</span>
+                    <span class="price">৳${item.price.toFixed(2)}</span>
                     <span class="quantity">Qty: ${item.quantity}</span>
                 </div>
             `;
-            cartContainer.appendChild(cartItem);
+            cartContainer.insertBefore(cartItem, cartTotal);
+            total += item.price * item.quantity;
         });
 
-        cartTotal.textContent = `Total: ৳${total.toFixed(2)}`;
+        cartTotal.textContent = `Total : ৳${total.toFixed(2)}`;
 
-        // If there are products in the cart, open the cart
         if (cart.length > 0 && !cartContainer.classList.contains('active')) {
             cartBtn.click();
         }
-
-        // If the cart is empty, hide the cart container
-        if (cart.length === 0) {
-            cartContainer.classList.remove('active');
-        }
     }
 
-    // Initialize cart UI
     updateCartUI();
 });
 
